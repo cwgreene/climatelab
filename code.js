@@ -2,11 +2,16 @@ var renderer;
 var scene;
 var camera;
 
-// TODO: Rather than define adjacency as
-// share a vertex, define it as, share an edge
+// TODO: Bleh. The sphere geometry doesn't recognize that
+// some vertices (like the ones at the poles) are all the same.
+// This means, for a sphere of 32 x 32, we get 32 spikes at the
+// top and bottom poles (single adjacent faces) and 60 'edge of the
+// world' triangles, which have 2 neighbors.
+//
+// So we need to figure out which of these vertices touch one another.
 function computeFaceAdjacency(geometry) {
   var inverse = new Map();
-  var adjacent = new Map();
+  var neighbors = new Map();
   // For each face, look at each vertex and
   // associate the face with that vertex.
   for (var face of geometry.faces) {
@@ -19,19 +24,33 @@ function computeFaceAdjacency(geometry) {
       inverse.get(vertex).push(face);
     }
   }
+  for (face of geometry.faces) {
+    neighbors.set(face, []);
+  }
   for (var face of geometry.faces) {
     var faceVertices = ["a", "b", "c"];
+    var adjacents = new Map();
     for (var vertexIndex of faceVertices) {
       var vertex = face[vertexIndex];
-      for (adjacentFace of inverse.get(vertex)) {
-        if (!adjacent.has(face)) {
-          adjacent.set(face, []);
+      for (var adjacentFace of inverse.get(vertex)) {
+        if (!adjacents.has(adjacentFace)) {
+          adjacents.set(adjacentFace, 0);
         }
-        adjacent.get(face).push(adjacentFace);
+        adjacents.set(adjacentFace, adjacents.get(adjacentFace) + 1);
       }
     }
+    for (var entry of adjacents) {
+      var adjacentFace = entry[0];
+      var count = entry[1];
+      if (count === 2) {
+        neighbors.get(face).push(adjacentFace);
+      }
+    }
+    if (neighbors.get(face).length !== 3) {
+      console.log(neighbors.get(face).length);
+    }
   }
-  return adjacent;
+  return neighbors;
 }
 
 function setup() {

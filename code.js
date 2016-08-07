@@ -21,8 +21,19 @@ var ambient = new THREE.AmbientLight(0x404040);
 scene.add( ambient );
 
 var geometry = new THREE.SphereGeometry( 5, 32, 32);
-var material = new THREE.MeshPhongMaterial( {color: 0x00FF00} );
+var material = new THREE.MeshPhongMaterial( {vertexColors: THREE.FaceColors} );
 var sphere = new THREE.Mesh( geometry, material );
 scene.add( sphere );
 
+for (var vert of sphere.geometry.vertices) {
+//  console.log(JSON.stringify(vert));
+}
+
+for (var face of sphere.geometry.faces) {
+  face.color.setRGB(Math.random(),Math.random(),Math.random());
+}
+for (var face of sphere.geometry.faces) {
+  console.log(JSON.stringify(face));
+}
+geometry.elementsNeedUpdate = true;
 renderer.render(scene, camera);

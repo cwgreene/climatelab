@@ -83,15 +83,15 @@ THREE.SphereBufferGeometry = function ( radius, widthSegments, heightSegments, p
 			var v3 = vertices[ y + 1 ][ x ];
 			var v4 = vertices[ y + 1 ][ (x + 1) % widthSegments ];
 
-            if ((y === 0 || y === heightSegments - 1)) {
-              if (y === 0) {
-                indices.push(northPoleVertex, v3, v4);
+            if ( (y === 0 || y === heightSegments - 1) ) {
+              if ( y === 0 ) {
+                indices.push( northPoleVertex, v3, v4 );
               } else {
-                indices.push(v1, v2, southPoleVertex);
+                indices.push( v1, v2, southPoleVertex );
               }
             } else {
-              if ( y !== 0 || thetaStart > 0 ) indices.push( v1, v2, v4 );
-              if ( y !== heightSegments - 1 || thetaEnd < Math.PI ) indices.push( v2, v3, v4 );
+              if ( thetaStart > 0 ) indices.push( v1, v2, v4 );
+              if ( thetaEnd < Math.PI ) indices.push( v2, v3, v4 );
             }
 
 		}

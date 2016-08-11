@@ -83,7 +83,7 @@ THREE.SphereBufferGeometry = function ( radius, widthSegments, heightSegments, p
 			var v3 = vertices[ y + 1 ][ x ];
 			var v4 = vertices[ y + 1 ][ x + 1 ];
 
-            if ((y === 0 || y === heightSegments - 1)) {
+            if ((y === 0)) {// || y === heightSegments - 1)) {
               if (y === 0) {
                 indices.push(northPoleVertex, v3, v4);
               } else {

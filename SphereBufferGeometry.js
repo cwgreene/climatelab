@@ -74,24 +74,27 @@ THREE.SphereBufferGeometry = function ( radius, widthSegments, heightSegments, p
 
     var northPoleVertex = vertices[0][0];
     var southPoleVertex = vertices[heightSegments][0];
+    var closedSides = thetaLength === 2 * Math.PI;
+    var closedTop = phiStart === 0;
+    var closedBottom = phiStart + phiLength >= Math.Pi;
 	for ( var y = 0; y < heightSegments; y ++ ) {
 
 		for ( var x = 0; x < widthSegments; x ++ ) {
-
-			var v1 = vertices[ y ][ (x + 1) % widthSegments];
+            var nextX = closedSides ? ( x + 1 ) % widthSegments : x + 1;
+			var v1 = vertices[ y ][ nextX ];
 			var v2 = vertices[ y ][ x ];
 			var v3 = vertices[ y + 1 ][ x ];
-			var v4 = vertices[ y + 1 ][ (x + 1) % widthSegments ];
-
-            if ( (y === 0 || y === heightSegments - 1) ) {
+			var v4 = vertices[ y + 1 ][ nextX ];
+            if ( ( y === 0 && closedTop )
+                  || ( y === heightSegments - 1 && closedBottom ) ) {
               if ( y === 0 ) {
                 indices.push( northPoleVertex, v3, v4 );
               } else {
                 indices.push( v1, v2, southPoleVertex );
               }
             } else {
-              indices.push( v1, v2, v4 );
-              indices.push( v2, v3, v4 );
+              if (y !== 0) indices.push( v1, v2, v4 );
+              if (y !== heightSegments - 1) indices.push( v2, v3, v4 );
             }
 
 		}

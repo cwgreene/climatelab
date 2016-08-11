@@ -90,8 +90,8 @@ THREE.SphereBufferGeometry = function ( radius, widthSegments, heightSegments, p
                 indices.push( v1, v2, southPoleVertex );
               }
             } else {
-              if ( thetaStart > 0 ) indices.push( v1, v2, v4 );
-              if ( thetaEnd < Math.PI ) indices.push( v2, v3, v4 );
+              indices.push( v1, v2, v4 );
+              indices.push( v2, v3, v4 );
             }
 
 		}

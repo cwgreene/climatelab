@@ -101,6 +101,7 @@ function setup() {
     camera,
     renderer,
     scene,
+    sphere,
     render: (...a) => renderer.render(...a),
     neighbors: neighbors,
     getNeighbors: (face) => neighbors.get(face)
@@ -109,4 +110,9 @@ function setup() {
 
 var world = setup();
 console.log(world);
-world.render(world.scene, world.camera);
+function animate() {
+  requestAnimationFrame(animate);
+  world.sphere.rotateY(Math.PI/200);
+  world.render(world.scene, world.camera);
+}
+animate();
